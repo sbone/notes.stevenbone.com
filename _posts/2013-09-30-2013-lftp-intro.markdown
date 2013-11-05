@@ -1,0 +1,59 @@
+---
+layout: post
+title: LFTP Intro
+---
+
+Problem: I have a seedbox and for FTP and SFTP connections get limited (probably my ISP?). 
+They’ll start strong, but quickly get throttled down to 300 kbps. 
+I know my home connection goes “up to” 2 mbps.
+
+
+Solution A: 
+Download a couple files at a time, with either Transmit or via a couple SCP processes in Screen. 
+Not ideal as now you’re waiting just a long for a single file, but you’re multitasking.
+
+
+Solution B:
+
+1. split -b 500MB filename.mkv
+
+2. scp them in Screen
+
+3. cat xa* > filename.mkv
+
+4. delete xa* locally and on the server.
+
+Faster for a single file, but wholly tedious. Lots of parts to remember. 
+Depending on your file (4GB+ HD files), splitting and catting can take a couple minutes on both ends.
+
+
+Solution C: LFTP
+
+1. lftp on Mini
+
+2. open [server name]
+
+3. [queue] pget filename.mkv
+
+Automates the worst parts of Solution B. 
+Uses segmented downloading, and out of the box it downloads the file in 5 parts, saturating my connection. 
+Locally there’s no cruft to join or delete. Super fast.
+
+
+Key LFTP Commands:
+
+- pget [filename] – segmented download of a single file
+
+- mirror [foldername] – download a directory
+
+- queue [command] – add said command to the task queue. The queue starts immediately.
+
+- queue – see current status of queued tasks
+
+TODO:
+
+- Screenshots of speeds, comparing the same file
+
+- Detail bookmarking with LFTP
+
+- Detail queueing in LFTP

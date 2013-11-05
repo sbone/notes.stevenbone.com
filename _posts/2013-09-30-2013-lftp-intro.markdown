@@ -3,17 +3,17 @@ layout: post
 title: LFTP Intro
 ---
 
-Problem: I have a seedbox and for FTP and SFTP connections get limited (probably my ISP?). 
-They’ll start strong, but quickly get throttled down to 300 kbps. 
+### Problem: I have a seedbox and for FTP and SFTP connections get limited (probably my ISP?).
+They’ll start strong, but quickly get throttled down to 300 kbps.
 I know my home connection goes “up to” 2 mbps.
 
 
-Solution A: 
-Download a couple files at a time, with either Transmit or via a couple SCP processes in Screen. 
+### Solution A:
+Download a couple files at a time, with either Transmit or via a couple SCP processes in Screen.
 Not ideal as now you’re waiting just a long for a single file, but you’re multitasking.
 
 
-Solution B:
+### Solution B:
 
 1. `split -b 500MB filename.mkv`
 
@@ -23,11 +23,11 @@ Solution B:
 
 4. `rm xa*` locally and on the server.
 
-Faster for a single file, but wholly tedious. Lots of parts to remember. 
+Faster for a single file, but wholly tedious. Lots of parts to remember.
 Depending on your file (4GB+ HD files), splitting and catting can take a couple minutes on both ends.
 
 
-Solution C: LFTP
+### Solution C: LFTP
 
 1. `lftp` on Mini
 
@@ -35,12 +35,12 @@ Solution C: LFTP
 
 3. `[queue] pget filename.mkv`
 
-Automates the worst parts of Solution B. 
-Uses segmented downloading, and out of the box it downloads the file in 5 parts, saturating my connection. 
+Automates the worst parts of Solution B.
+Uses segmented downloading, and out of the box it downloads the file in 5 parts, saturating my connection.
 Locally there’s no cruft to join or delete. Super fast.
 
 
-Key LFTP Commands:
+### Key LFTP Commands:
 
 - `open -u [username],[placeholder password] sftp://[server address]` - connect to your remote server
 
@@ -55,4 +55,18 @@ Key LFTP Commands:
 - `bookmark add [name]` - save your remote server login information
 
 - `open [name]` - connect to a bookmark
+
+
+### LFTPRC
+
+Create a .lftprc in your home directory and add these to ensure speedy downloads:
+
+	# use 10 connections by default (instead of the standard 5)
+	set pget:default-n 10
+
+	# use segmented downloading for directories
+	set mirror:use-pget-n 10
+
+	set mirror:parallel-transfer-count 2
+	set mirror:parallel-directories true
 

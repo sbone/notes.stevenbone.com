@@ -15,13 +15,13 @@ Not ideal as now you’re waiting just a long for a single file, but you’re mu
 
 Solution B:
 
-1. split -b 500MB filename.mkv
+1. `split -b 500MB filename.mkv`
 
-2. scp them in Screen
+2. `scp` them in Screen
 
-3. cat xa* > filename.mkv
+3. `cat xa* > filename.mkv`
 
-4. delete xa* locally and on the server.
+4. `rm xa*` locally and on the server.
 
 Faster for a single file, but wholly tedious. Lots of parts to remember. 
 Depending on your file (4GB+ HD files), splitting and catting can take a couple minutes on both ends.
@@ -29,11 +29,11 @@ Depending on your file (4GB+ HD files), splitting and catting can take a couple 
 
 Solution C: LFTP
 
-1. lftp on Mini
+1. `lftp` on Mini
 
-2. open [server name]
+2. `open [server name]`
 
-3. [queue] pget filename.mkv
+3. `[queue] pget filename.mkv`
 
 Automates the worst parts of Solution B. 
 Uses segmented downloading, and out of the box it downloads the file in 5 parts, saturating my connection. 
@@ -42,18 +42,17 @@ Locally there’s no cruft to join or delete. Super fast.
 
 Key LFTP Commands:
 
-- pget [filename] – segmented download of a single file
+- `open -u [username],[placeholder password] sftp://[server address]` - connect to your remote server
 
-- mirror [foldername] – download a directory
+- `pget [filename]` – segmented download of a single file
 
-- queue [command] – add said command to the task queue. The queue starts immediately.
+- `mirror [foldername]` – download a directory
 
-- queue – see current status of queued tasks
+- `queue [command]` – add said command to the task queue. The queue starts immediately.
 
-TODO:
+- `queue` – see current status of queued tasks
 
-- Screenshots of speeds, comparing the same file
+- `bookmark add [name]` - save your remote server login information
 
-- Detail bookmarking with LFTP
+- `open [name]` - connect to a bookmark
 
-- Detail queueing in LFTP
